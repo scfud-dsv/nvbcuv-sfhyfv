@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            padding: 20px;
+            flex-direction: column;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+
+        }
+        
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background: #000;
+            margin: 0 auto;
+        }
+        
+        /* 移除上下方黑边 */
+        .video-js {
+            width: 100%;
+            height: 0;
+            padding-top: 56.25%; /* 16:9 宽高比 */
+            position: relative;
+            background-color: #060606;
+        }
+        
+        /* 确保视频元素填满 */
+        .video-js .vjs-tech {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 整个区域去除黑边 */
+        }
+        
+        /* 调整播放按钮位置 */
+        .video-js .vjs-big-play-button {
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            line-height: 70px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .video-js .vjs-big-play-button:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        /* 自定视频控件样式 */
+        .video-js .vjs-control-bar {
+            background: rgba(0, 0, 0, 0.7);
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            height: 3.5em;
+            transition: opacity 0.3s ease;
+        }
+        
+        .video-js .vjs-play-progress {
+            background: #6bff78;
+        }
+        
+        .video-js .vjs-slider {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .url-display {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+        }
+        
+        /* 移动端屏左右边缘 */
+        @media (max-width: 768px) {
+            .video-container {
+                border-radius: 0;
+                margin-left: -20px;
+                margin-right: -20px;
+                width: calc(100% + 40px);
+                max-width: none;
+                box-shadow: none;
+            }
+            
+            .video-js .vjs-control-bar {
+                height: 3em;
+            }
+            
+            .video-js .vjs-big-play-button {
+                width: 60px;
+                height: 60px;
+                line-height: 60px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .video-container {
+                margin-left: -10px;
+                margin-right: -10px;
+                width: calc(100% + 20px);
+            }
+            
+            .video-js .vjs-control-bar {
+                height: 2.5em;
+            }
+            
+            .video-js .vjs-big-play-button {
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+            }
+        }
+        
+        .vjs-poster {
+            display: inline-block;
+            height: 100%;
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="video-container">
+            <video
+                id="my-video"
+                class="video-js vjs-default-skin"
+                controls
+                preload="auto"
+                poster="235x140.png"
+                data-setup='{}'
+            >
+                <source src="https://t33.cdn2020.com/video/m3u8/2025/09/20/12b3a337/index.m3u8" type="application/x-mpegURL">
+                <p class="vjs-no-js">
+                    您的浏览器不支持HTML5视频播放
+                </p>
+            </video>
+        </div>
+        
+    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+    <script>
+        // 初始化播放器
+        document.addEventListener('DOMContentLoaded', function() {
+            var player = videojs('my-video');
+            
+            // 当视频就绪时确保正确显示
+            player.ready(function() {
+                // 确保视频填满容器
+                this.on('loadedmetadata', function() {
+                    console.log('M3U8视频已加载，无黑边模式已启用');
+                });
+            });
+            
+            // 添加响应式处理
+            window.addEventListener('resize', function() {
+                player && player.trigger('resize');
+            });
+        });
+    </script>
+</body>
+</html>
